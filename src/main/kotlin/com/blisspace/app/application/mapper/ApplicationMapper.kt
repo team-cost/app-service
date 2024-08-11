@@ -7,5 +7,11 @@ import org.springframework.stereotype.Component
 @Component
 class ApplicationMapper {
 
-  fun toResponse(app: App) = AppResponse()
+  fun toResponse(app: App) = AppResponse(
+    id = app.id,
+    description = app.description,
+    status = app.status,
+    icon = app.icon,
+    version = app.version
+  )
 }
