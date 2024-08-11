@@ -1,5 +1,7 @@
 package com.blisspace.app.application
 
+import com.blisspace.app.application.exception.AppAlreadyExistsException
+import com.blisspace.app.application.exception.AppNotFoundException
 import com.blisspace.app.application.mapper.ApplicationMapper
 import com.blisspace.app.application.model.AppResponse
 import com.blisspace.app.application.model.CreateAppRequest
@@ -12,6 +14,7 @@ import com.blisspace.app.port.inbound.UpdateAppStatusUseCase
 import com.blisspace.app.port.outbound.LoadAppPort
 import com.blisspace.app.port.outbound.LoadAppsPort
 import com.blisspace.app.port.outbound.SaveAppPort
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Service
 
 @Service
@@ -42,10 +45,14 @@ class AppService(
   }
 
   override fun updateStatus(id: String, status: Status) {
-    saveAppPort.saveApp(loadAppOrThrow(id).updateStatus(status))
+    try {
+      saveAppPort.saveApp(loadAppOrThrow(id).updateStatus(status))
+    } catch (e: DuplicateKeyException) {
+      throw AppAlreadyExistsException(id)
+    }
   }
 
   private fun loadAppOrThrow(id: String): App {
-    return loadAppPort.loadApp(id) ?: throw RuntimeException()
+    return loadAppPort.loadApp(id) ?: throw AppNotFoundException(id)
   }
 }
