@@ -39,17 +39,17 @@ class AppService(
   }
 
   override fun createApp(request: CreateAppRequest) {
-    saveAppPort.saveApp(
-      App.create(request.id, request.description, Status.PENDING, request.icon, request.version)
-    )
+    try {
+      saveAppPort.saveApp(
+        App.create(request.id, request.description, Status.PENDING, request.icon, request.version)
+      )
+    } catch (e: DuplicateKeyException) {
+      throw AppAlreadyExistsException(request.id)
+    }
   }
 
   override fun updateStatus(id: String, status: Status) {
-    try {
-      saveAppPort.saveApp(loadAppOrThrow(id).updateStatus(status))
-    } catch (e: DuplicateKeyException) {
-      throw AppAlreadyExistsException(id)
-    }
+    saveAppPort.saveApp(loadAppOrThrow(id).updateStatus(status))
   }
 
   private fun loadAppOrThrow(id: String): App {
