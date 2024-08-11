@@ -8,7 +8,6 @@ import com.blisspace.app.port.inbound.CreateAppUseCase
 import com.blisspace.app.port.inbound.GetAppUseCase
 import com.blisspace.app.port.inbound.GetAppsUseCase
 import com.blisspace.app.port.inbound.UpdateAppStatusUseCase
-import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -49,10 +48,10 @@ class AppController(
       .body(DataResponse.success(data = app))
   }
 
-  @PutMapping("/api/v1.0/apps/{id}/status")
+  @PutMapping("/api/v1.0/apps/{id}/status/{status}")
   fun updateStatus(
       @PathVariable("id") id: String,
-      @PathParam("status") status: Status,
+      @PathVariable("status") status: Status,
   ): ResponseEntity<DataResponse<AppResponse>> {
     updateAppStatusUseCase.updateStatus(id, status)
     return ResponseEntity
