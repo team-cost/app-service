@@ -1,25 +1,36 @@
 package com.blisspace.app.adapter.outbound
 
+import com.blisspace.app.adapter.outbound.mapper.PersistenceMapper
 import com.blisspace.app.domain.App
+import com.blisspace.app.infrastructure.mysql.AppRepository
 import com.blisspace.app.port.outbound.LoadAppPort
 import com.blisspace.app.port.outbound.LoadAppsPort
 import com.blisspace.app.port.outbound.SaveAppPort
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
 
 @Service
-class AppPersistenceAdapter : LoadAppsPort,
-                              LoadAppPort,
-                              SaveAppPort {
+class AppPersistenceAdapter(
+    private val appRepository: AppRepository,
+    private val persistenceMapper: PersistenceMapper,
+) : LoadAppsPort,
+    LoadAppPort,
+    SaveAppPort {
 
   override fun loadApps(): List<App> {
-    TODO("Not yet implemented")
+    return appRepository
+      .findAll()
+      .map(persistenceMapper::toDomain)
   }
 
   override fun loadApp(id: String): App? {
-    TODO("Not yet implemented")
+    return appRepository
+      .findById(id)
+      .map(persistenceMapper::toDomain)
+      .getOrNull()
   }
 
   override fun saveApp(app: App) {
-    TODO("Not yet implemented")
+    appRepository.save(persistenceMapper.toPersistence(app))
   }
 }

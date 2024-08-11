@@ -29,18 +29,10 @@ class App private constructor(
 
   companion object {
 
-    fun create(
-        id: String,
-        description: String,
-        status: Status,
-        icon: String,
-        version: String
-    ): App = App(
-      id = id,
-      description = description,
-      status = status,
-      icon = icon,
-      version = version
-    )
+    fun create(id: String, description: String, status: Status, icon: String, version: String) =
+      App(id = id, description = description, status = status, icon = icon, version = version)
+
+    fun of(id: String, description: String, status: Status, icon: String, version: String) =
+      App(id = id, description = description, status = status, icon = icon, version = version)
   }
 }
