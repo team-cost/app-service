@@ -24,7 +24,7 @@ class AppPersistenceAdapterTest : DescribeSpec({
     every { appRepository.findAll() } returns listOf(appEntity)
     context("load app domains") {
       it("should return list") {
-        shouldNotThrowAny { appPersistenceAdapter.loadApps() } should beInstanceOf<List<App>>()
+        shouldNotThrowAny { appPersistenceAdapter.loadAllApps() } should beInstanceOf<List<App>>()
       }
     }
   }

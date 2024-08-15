@@ -7,7 +7,7 @@ import com.blisspace.app.application.model.CreateAppRequest
 import com.blisspace.app.domain.App
 import com.blisspace.app.domain.Status
 import com.blisspace.app.port.outbound.LoadAppPort
-import com.blisspace.app.port.outbound.LoadAppsPort
+import com.blisspace.app.port.outbound.LoadAllAppsPort
 import com.blisspace.app.port.outbound.SaveAppPort
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
@@ -20,15 +20,15 @@ import org.springframework.dao.DuplicateKeyException
 
 class AppServiceTest : DescribeSpec({
   val loadAppPort: LoadAppPort = mockk(relaxed = true)
-  val loadAppsPort: LoadAppsPort = mockk(relaxed = true)
+  val loadAllAppsPort: LoadAllAppsPort = mockk(relaxed = true)
   val saveAppPort: SaveAppPort = mockk(relaxed = true)
   val applicationMapper = ApplicationMapper()
-  val appService = AppService(loadAppPort, loadAppsPort, saveAppPort, applicationMapper)
+  val appService = AppService(loadAppPort, loadAllAppsPort, saveAppPort, applicationMapper)
 
   describe("getApps") {
 
     context("when there are no apps") {
-      every { loadAppsPort.loadApps() } returns listOf()
+      every { loadAllAppsPort.loadAllApps() } returns listOf()
       it("should return empty list") {
         appService.getApps() shouldBe emptyList()
       }
@@ -36,7 +36,7 @@ class AppServiceTest : DescribeSpec({
 
     context("when exists apps") {
       val app = mockk<App>(relaxed = true)
-      every { loadAppsPort.loadApps() } returns listOf(app)
+      every { loadAllAppsPort.loadAllApps() } returns listOf(app)
       it("should success") {
         appService.getApps() shouldBe listOf(applicationMapper.toResponse(app))
       }

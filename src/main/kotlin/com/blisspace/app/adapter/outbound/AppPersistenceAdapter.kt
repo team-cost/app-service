@@ -4,7 +4,7 @@ import com.blisspace.app.adapter.outbound.mapper.PersistenceMapper
 import com.blisspace.app.domain.App
 import com.blisspace.app.infrastructure.mysql.AppRepository
 import com.blisspace.app.port.outbound.LoadAppPort
-import com.blisspace.app.port.outbound.LoadAppsPort
+import com.blisspace.app.port.outbound.LoadAllAppsPort
 import com.blisspace.app.port.outbound.SaveAppPort
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
@@ -13,11 +13,11 @@ import kotlin.jvm.optionals.getOrNull
 class AppPersistenceAdapter(
     private val appRepository: AppRepository,
     private val persistenceMapper: PersistenceMapper,
-) : LoadAppsPort,
+) : LoadAllAppsPort,
     LoadAppPort,
     SaveAppPort {
 
-  override fun loadApps(): List<App> {
+  override fun loadAllApps(): List<App> {
     return appRepository
       .findAll()
       .map(persistenceMapper::toDomain)

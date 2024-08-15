@@ -12,7 +12,7 @@ import com.blisspace.app.port.inbound.GetAppUseCase
 import com.blisspace.app.port.inbound.GetAppsUseCase
 import com.blisspace.app.port.inbound.UpdateAppStatusUseCase
 import com.blisspace.app.port.outbound.LoadAppPort
-import com.blisspace.app.port.outbound.LoadAppsPort
+import com.blisspace.app.port.outbound.LoadAllAppsPort
 import com.blisspace.app.port.outbound.SaveAppPort
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Service
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service
 @Service
 class AppService(
     private val loadAppPort: LoadAppPort,
-    private val loadAppsPort: LoadAppsPort,
+    private val loadAllAppsPort: LoadAllAppsPort,
     private val saveAppPort: SaveAppPort,
     private val applicationMapper: ApplicationMapper,
 ) : GetAppsUseCase,
@@ -29,8 +29,8 @@ class AppService(
     UpdateAppStatusUseCase {
 
   override fun getApps(): List<AppResponse> {
-    return loadAppsPort
-      .loadApps()
+    return loadAllAppsPort
+      .loadAllApps()
       .map(applicationMapper::toResponse)
   }
 
