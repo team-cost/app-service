@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: app-service
+
+  profiles:
+    default: local
